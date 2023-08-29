@@ -1,7 +1,7 @@
 <template>
   <PageContainer title="文章分类">
     <template #extra>
-      <el-button type="primary"> 添加分类 </el-button>
+      <el-button type="primary" @click="onAddChannel"> 添加分类 </el-button>
     </template>
     <!-- 主体部分 -->
     <el-table :data="articleList" style="width: 100%">
@@ -30,6 +30,7 @@
         <el-empty description="没有数据" />
       </template>
     </el-table>
+    <ChannelEdit ref="dialog"></ChannelEdit>
   </PageContainer>
 </template>
 
@@ -37,15 +38,20 @@
 import { getArticleService } from '@/api/article'
 import { onMounted, ref } from 'vue'
 import { Edit, Delete } from '@element-plus/icons-vue'
+import ChannelEdit from './components/ChannelEdit.vue'
 const articleList = ref([])
+const dialog = ref()
 onMounted(async () => {
   const res = await getArticleService()
   articleList.value = res.data.data
   console.log(articleList.value)
 })
 // 文章分类按钮
+const onAddChannel = () => {
+  dialog.value.open({})
+}
 const onEditChannel = (row) => {
-  console.log(row)
+  dialog.value.open(row)
 }
 const onDelChannel = (row) => {
   console.log(row)
