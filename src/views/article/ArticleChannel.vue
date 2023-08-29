@@ -30,13 +30,13 @@
         <el-empty description="没有数据" />
       </template>
     </el-table>
-    <ChannelEdit ref="dialog"></ChannelEdit>
+    <ChannelEdit @success="onSuccess" ref="dialog"></ChannelEdit>
   </PageContainer>
 </template>
 
 <script setup>
 import { getArticleService } from '@/api/article'
-import { onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import { Edit, Delete } from '@element-plus/icons-vue'
 import ChannelEdit from './components/ChannelEdit.vue'
 const articleList = ref([])
@@ -44,8 +44,14 @@ const dialog = ref()
 onMounted(async () => {
   const res = await getArticleService()
   articleList.value = res.data.data
-  console.log(articleList.value)
+  // console.log(articleList.value)
 })
+const onSuccess = () => {
+  nextTick(async () => {
+    const res = await getArticleService()
+    articleList.value = res.data.data
+  })
+}
 // 文章分类按钮
 const onAddChannel = () => {
   dialog.value.open({})

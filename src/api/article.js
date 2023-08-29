@@ -1,8 +1,9 @@
 import request from '../utils/request'
-// 增加文章分类
-export const addArticleService = ({ cate_name, cate_alias }) => {
-  return request.post('/my/cate/add', { cate_name, cate_alias })
-}
+// 添加文章分类
+export const artAddChannelService = (data) => request.post('/my/cate/add', data)
+// 编辑文章分类
+export const artEditChannelService = (data) =>
+  request.put('/my/cate/info', data)
 // 获取文章分类
 export const getArticleService = () => {
   return request.get('/my/cate/list')
