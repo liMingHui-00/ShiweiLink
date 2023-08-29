@@ -8,3 +8,8 @@ export const artEditChannelService = (data) =>
 export const getArticleService = () => {
   return request.get('/my/cate/list')
 }
+//删除
+export const artDelChannelService = (id) =>
+  request.delete('/my/cate/del', {
+    params: { id }
+  })

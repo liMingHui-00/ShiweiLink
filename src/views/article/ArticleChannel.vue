@@ -35,10 +35,10 @@
 </template>
 
 <script setup>
-import { getArticleService } from '@/api/article'
+import { getArticleService, artDelChannelService } from '@/api/article'
 import { nextTick, onMounted, ref } from 'vue'
 import { Edit, Delete } from '@element-plus/icons-vue'
-import ChannelEdit from './components/ChannelEdit.vue'
+import ChannelEdit from '@/views/article/components/ChannelEdit.vue'
 const articleList = ref([])
 const dialog = ref()
 onMounted(async () => {
@@ -59,8 +59,19 @@ const onAddChannel = () => {
 const onEditChannel = (row) => {
   dialog.value.open(row)
 }
-const onDelChannel = (row) => {
-  console.log(row)
+
+const onDelChannel = async (row) => {
+  await ElMessageBox.confirm('你确认删除该分类信息吗？', '温馨提示', {
+    type: 'warning',
+    confirmButtonText: '确认',
+    cancelButtonText: '取消'
+  })
+  await artDelChannelService(row.id)
+  ElMessage({ type: 'success', message: '删除成功' })
+  nextTick(async () => {
+    const res = await getArticleService()
+    articleList.value = res.data.data
+  })
 }
 </script>
 
