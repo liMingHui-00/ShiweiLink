@@ -1,7 +1,10 @@
 <template>
-  <div>
-    <h3>文章管理</h3>
-  </div>
+  <PageContainer title="文章分类">
+    <template #extra>
+      <el-button type="primary"> 添加分类 </el-button>
+    </template>
+    主体部分
+  </PageContainer>
 </template>
 
 <script setup></script>
