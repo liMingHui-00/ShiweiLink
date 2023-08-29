@@ -75,6 +75,7 @@ const register = async () => {
   isRegister.value = !isRegister.value
 }
 const userStore = useUserStore()
+const router = useRouter()
 const login = async () => {
   await form.value.validate()
   // 开始登录
@@ -84,7 +85,7 @@ const login = async () => {
   // 设置token
   userStore.setToken(token)
   ElMessage.success('登录成功')
-  useRouter().push('/')
+  router.push('/')
 }
 
 watch(isRegister, () => {
