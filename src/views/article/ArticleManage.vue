@@ -6,13 +6,10 @@
     <!-- 表单区域 -->
     <el-form inline>
       <el-form-item label="文章分类：">
-        <el-select>
-          <el-option label="新闻" value="111"></el-option>
-          <el-option label="体育" value="222"></el-option>
-        </el-select>
+        <ChannelSelect v-model="params.cate_id"></ChannelSelect>
       </el-form-item>
       <el-form-item label="发布状态：">
-        <el-select>
+        <el-select v-model="params.state">
           <el-option label="已发布" value="已发布"></el-option>
           <el-option label="草稿" value="草稿"></el-option>
         </el-select>
@@ -30,7 +27,10 @@
         </template>
       </el-table-column>
       <el-table-column label="分类" prop="cate_name"></el-table-column>
-      <el-table-column label="发表时间" width="300" prop="pub_date">
+      <el-table-column label="发表时间">
+        <template #default="{ row }">
+          {{ formatTime(row.pub_date) }}
+        </template>
       </el-table-column>
       <el-table-column label="状态" prop="state"></el-table-column>
       <el-table-column label="操作" width="100">
@@ -60,24 +60,26 @@
 
 <script setup>
 import { Delete, Edit } from '@element-plus/icons-vue'
+import ChannelSelect from '@/views/article/components/ChannelSelect.vue'
+import { artGetListService } from '@/api/article.js'
 import { ref } from 'vue'
-// 假数据
-const articleList = ref([
-  {
-    id: 5961,
-    title: '新的文章啊',
-    pub_date: '2022-07-10 14:53:52.604',
-    state: '已发布',
-    cate_name: '体育'
-  },
-  {
-    id: 5962,
-    title: '新的文章啊',
-    pub_date: '2022-07-10 14:54:30.904',
-    state: '草稿',
-    cate_name: '体育'
-  }
-])
+import { formatTime } from '@/utils/format'
+
+const articleList = ref([])
+const params = ref({
+  pagenum: 1,
+  pagesize: 5,
+  cate_id: '',
+  state: ''
+})
+const total = ref(0) //条数
+const getArticleList = async () => {
+  const res = await artGetListService(params.value)
+  articleList.value = res.data.data
+  total.value = res.data.total
+}
+getArticleList()
+
 const onEditArticle = (row) => {
   console.log(row)
 }
