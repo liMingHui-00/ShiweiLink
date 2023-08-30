@@ -1,9 +1,64 @@
+<script setup>
+import { useUserStore } from '@/stores'
+import PageContainer from '@/components/PageContainer.vue'
+import { ref } from 'vue'
+import { userUpdateInfoService } from '@/api/user'
+const {
+  user: { username, nickname, email, id },
+  userInfo
+} = useUserStore()
+const formRef = ref()
+
+const userInfo2 = ref({ username, nickname, email, id })
+const onSubmit = async () => {
+  const valid = await formRef.value.validate()
+  if (valid) {
+    await userUpdateInfoService(userInfo2.value)
+    await userInfo()
+    ElMessage.success('修改成功')
+  }
+}
+const rules = {
+  nickname: [
+    { required: true, message: '请输入用户昵称', trigger: 'blur' },
+    {
+      pattern: /^\S{2,10}$/,
+      message: '昵称必须是2-10位的非空字符串',
+      trigger: 'blur'
+    }
+  ],
+  email: [
+    { required: true, message: '请输入用户邮箱', trigger: 'blur' },
+    { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
+  ]
+}
+</script>
+
 <template>
-  <div>
-    <h3>个人详情</h3>
-  </div>
+  <page-container title="基本资料">
+    <el-row>
+      <el-col :span="12">
+        <el-form
+          :model="userInfo2"
+          :rules="rules"
+          ref="formRef"
+          label-width="100px"
+          size="large"
+        >
+          <el-form-item label="登录名称">
+            <el-input v-model="userInfo2.username" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="用户昵称" prop="nickname">
+            <el-input v-model="userInfo2.nickname"></el-input>
+          </el-form-item>
+          <el-form-item label="用户邮箱" prop="email">
+            <el-input v-model="userInfo2.email"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">提交修改</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+  </page-container>
 </template>
-
-<script setup></script>
-
-<style lang="scss" scoped></style>
